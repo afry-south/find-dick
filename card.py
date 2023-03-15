@@ -1,20 +1,9 @@
 import pygame.image
 import pygame.transform
 from pygame.locals import *
-from sound import Sound
-from settings import card_size, card_height, card_width
-from settings import bomb_sound, found_sound, game_over_sound
 from os.path import exists
+from sound import Sound
 
-cardback = pygame.image.load("resources/cardback.jpg")
-cardback = pygame.transform.rotate(cardback, 90)
-cardback = pygame.transform.scale(cardback, card_size)
-
-bombImage = pygame.image.load("resources/bomb.png")
-bombImage = pygame.transform.scale(bombImage, card_size)
-
-dickImage = pygame.image.load("resources/dick.png")
-dickImage = pygame.transform.scale(dickImage, card_size)
 
 pygame.font.init()
 basicFont = pygame.font.SysFont("dejavusans", 14)
@@ -23,20 +12,18 @@ basicFont = pygame.font.SysFont("dejavusans", 14)
 #     print(font)
 
 
-def loadImage(name, self):
-    if(exists("resources/"+ name + ".png")):
-        image = pygame.image.load("resources/"+ name + ".png")
-        return pygame.transform.scale(image, card_size)
-    else:
-        return self.front
 class Card:
     front = None
-    surface = cardback
     name = ""
 
-    def __init__(self, name):
+    def __init__(self, name, card_width, card_height):
         self.name = name
-        self.front = pygame.Surface((card_width, card_height))
+        self.card_size = (card_width, card_height)
+        cardback = pygame.image.load("resources/cardback.jpg")
+        cardback = pygame.transform.rotate(cardback, 90)
+        self.cardback = pygame.transform.scale(cardback, self.card_size)
+        self.surface = self.cardback
+        self.front = pygame.Surface(self.card_size)
         self.front.fill((100, 100, 200))
         text = basicFont.render(name, True, (255, 255, 255))
         textRect = text.get_rect()
@@ -46,10 +33,15 @@ class Card:
 
     def flip(self):
         s = Sound()
-        if self.surface == cardback:
-            self.surface = loadImage(self.name, self)
+        if self.surface == self.cardback:
+            self.surface = self.loadImage()
         else:
-            s.surface = cardback
-        #Play sound
+            self.surface = self.cardback
         s.play(self.name)
 
+    def loadImage(self):
+        if (exists("resources/" + self.name + ".png")):
+            image = pygame.image.load("resources/" + self.name + ".png")
+            return pygame.transform.scale(image, self.card_size)
+        else:
+            return self.front

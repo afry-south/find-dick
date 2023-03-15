@@ -10,9 +10,6 @@ from pygame.locals import *
 #from slack import SlackBot
 from slack_mock import SlackBot
 from card import Card
-from sound import Sound
-from settings import card_size, card_height, card_width
-from settings import bomb_sound, found_sound, game_over_sound
 
 
 token = input('enter bot token\n')
@@ -22,12 +19,13 @@ slackbot = SlackBot(token)
 dick_card = "Dick"
 bomb_card = "bomb"
 
-size_of_deck = 16
+size_of_deck = 64
 n_rows = int(math.sqrt(size_of_deck))
+card_height = 1200 / (2*n_rows)
+card_width = int(card_height * 8 / 11.5)
 
 
-def create_deck():
-    deck = []
+def create_deck(deck):
     for i in range(1, size_of_deck - 2):
         deck.append('hjärter '+str(i))
         deck.append('spader '+str(i))
@@ -38,26 +36,27 @@ def create_deck():
 
 # 4*4 kort + Dick + bomb
 def create_board():
-    deck = create_deck()
+    deck = []
+    deck.append('Daniel')
+    deck.append('Ronnie')
+    deck.append('Marcos')
+    deck.append('Per')
+    deck.append('Erica')
+    deck.append('Dennis')
+    deck.append('Carl')
+    deck.append('Patrik')
+    deck.append('Hampus')
+    deck.append('Chadvin')
+    deck.append('Lisa')
+    deck.append('Oscar')
+    deck.append('Björn')
+    deck.append('Johan')
+    deck.append('Nina')
     random.shuffle(deck)
-    board = deck[:size_of_deck-16]
+    deck = create_deck(deck)
+    board = deck[:size_of_deck-2]
     board.append(dick_card)
     board.append(bomb_card)
-    board.append('Daniel')
-    board.append('Ronnie')
-    board.append('Marcos')
-    board.append('Per')
-    board.append('Erica')
-    board.append('Dennis')
-    board.append('Carl')
-    board.append('Patrik')
-    board.append('Hampus')
-    board.append('Chadvin')
-    board.append('Lisa')
-    #board.append('Oscar')
-    board.append('Björn')
-    board.append('Johan')
-    board.append('Nina')
     random.shuffle(board)
     return board
 
@@ -136,7 +135,7 @@ def send_random_clue(user):
 windowSurface = pygame.display.set_mode((1200, 700), 0 , 32)
 pygame.display.set_caption('Find Dick')
 
-cards = [Card(s) for s in board]
+cards = [Card(s, card_width, card_height) for s in board]
 pygame.font.init()
 basicFont = pygame.font.SysFont("dejavusans", size_of_deck-2)
 
