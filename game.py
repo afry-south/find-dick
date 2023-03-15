@@ -1,7 +1,5 @@
 import math
 
-import requests
-import json
 import sys
 from collections import defaultdict
 import random
@@ -19,7 +17,7 @@ slackbot = SlackBot(token)
 dick_card = "Dick"
 bomb_card = "bomb"
 
-size_of_deck = 64
+size_of_deck = 16
 n_rows = int(math.sqrt(size_of_deck))
 card_height = 1200 / (2*n_rows)
 card_width = int(card_height * 8 / 11.5)
@@ -36,22 +34,8 @@ def create_deck(deck):
 
 # 4*4 kort + Dick + bomb
 def create_board():
-    deck = []
-    deck.append('Daniel')
-    deck.append('Ronnie')
-    deck.append('Marcos')
-    deck.append('Per')
-    deck.append('Erica')
-    deck.append('Dennis')
-    deck.append('Carl')
-    deck.append('Patrik')
-    deck.append('Hampus')
-    deck.append('Chadvin')
-    deck.append('Lisa')
-    deck.append('Oscar')
-    deck.append('Björn')
-    deck.append('Johan')
-    deck.append('Nina')
+    deck = ['Daniel', 'Ronnie', 'Marcos', 'Per', 'Erica', 'Dennis', 'Carl', 'Patrik', 'Hampus', 'Chadvin', 'Lisa',
+            'Oscar', 'Björn', 'Johan', 'Nina']
     random.shuffle(deck)
     deck = create_deck(deck)
     board = deck[:size_of_deck-2]
@@ -61,19 +45,19 @@ def create_board():
     return board
 
 
-def right_or_left(findex, cindex, card):
-    if findex % n_rows < cindex % n_rows:
+def right_or_left(dick_index, card_index, card):
+    if dick_index % n_rows < card_index % n_rows:
         return 'Dick är vänster om ' + card
-    elif findex % n_rows > cindex % n_rows:
+    elif dick_index % n_rows > card_index % n_rows:
         return 'Dick är höger om ' + card
     else:
         return ''
 
 
-def up_or_down(findex, cindex, card):
-    if int(findex / n_rows) > int(cindex / n_rows):
+def up_or_down(dick_index, card_index, card):
+    if int(dick_index / n_rows) > int(card_index / n_rows):
         return 'Dick är nedanför ' + card
-    elif int(findex / n_rows) < int(cindex / n_rows):
+    elif int(dick_index / n_rows) < int(card_index / n_rows):
         return 'Dick är ovanför ' + card
     else:
         return ''
@@ -83,11 +67,11 @@ def create_clues(board):
     clues = []
     for card in board:
         if card != dick_card and card != bomb_card:
-            cindex = board.index(card)
-            clue1 = right_or_left(dick_index, cindex, card)
+            card_index = board.index(card)
+            clue1 = right_or_left(dick_index, card_index, card)
             if clue1 != '':
                 clues.append(clue1)
-            clue2 = up_or_down(dick_index, cindex, card)
+            clue2 = up_or_down(dick_index, card_index, card)
             if clue2 != '':
                 clues.append(clue2)
             
@@ -104,12 +88,12 @@ clues = create_clues(board)
 users = defaultdict(dict)
 
 for email in emails:
-    users[email]=slackbot.getUserId(email)
+    users[email] = slackbot.getUserId(email)
 
 for user in users:
     slackbot.sendMessage(users[user], 'Dick har försvunnit under mystiska omständigheter! Senast sågs han gömd i denna kortlek - kasta er in och släpp honom fri. Men se upp! En skojare har klämt in en bomb i kortleken i hopp om att säkerställa misslyckande. Använd de utströdda ledtrådarna, se igenom skojarens lustigheter, undvik bomben och rädda Dick ut ur kortleken!')
 
-randomUsers= list(users.keys())
+randomUsers = list(users.keys())
 random.shuffle(randomUsers)
 impostors = randomUsers[:1]
 
@@ -125,6 +109,7 @@ def pretty_board_print():
 
 for impostor in impostors:
     slackbot.sendMessage(users[impostor], 'Hej, du är en skojare, ditt uppdrag är att lura de andra deltagarna med falska ledtrådar.\nBomben är på rad: ' + str(int(bomb_index / n_rows) + 1) + ' och kolumn: ' + str(int(bomb_index % n_rows) + 1) + '\nDick är på rad: ' + str(int(dick_index / n_rows) + 1) + ' och kolumn: ' + str(int(dick_index % n_rows) + 1) + '\nmed följande bräde:\n' + pretty_board_print())
+
 
 def send_random_clue(user):
     slackbot.sendMessage(users[user], clues[0])
