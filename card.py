@@ -1,7 +1,9 @@
 import pygame.image
 import pygame.transform
 from pygame.locals import *
+from sound import Sound
 from settings import card_size, card_height, card_width
+from settings import bomb_sound, found_sound, game_over_sound
 
 cardback = pygame.image.load("resources/cardback.jpg")
 cardback = pygame.transform.rotate(cardback, 90)
@@ -30,7 +32,11 @@ class Card:
         self.front.blit(text, textRect)
 
     def flip(self):
+        s = Sound()
         if self.surface == cardback:
             self.surface = self.front
         else:
-            self.surface = cardback
+            s.surface = cardback
+        #Play sound
+        s.play(self.name)    
+        

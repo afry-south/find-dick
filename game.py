@@ -8,7 +8,10 @@ from pygame.locals import *
 # from slack import SlackBot
 from slack_mock import SlackBot
 from card import Card
+from sound import Sound
 from settings import card_size, card_height, card_width
+from settings import bomb_sound, found_sound, game_over_sound
+
 
 token = input('enter bot token\n')
 emails = input("enter emails. Example: _\n").split(',')
