@@ -1,3 +1,5 @@
+import math
+
 import requests
 import json
 import sys
@@ -5,7 +7,7 @@ from collections import defaultdict
 import random
 import pygame
 from pygame.locals import *
-# from slack import SlackBot
+#from slack import SlackBot
 from slack_mock import SlackBot
 from card import Card
 from settings import card_size, card_height, card_width
@@ -17,10 +19,10 @@ slackbot = SlackBot(token)
 dick_card = "Dick"
 bomb_card = "bomb"
 
-
+size_of_deck = 36
 def create_deck():
     deck = []
-    for i in range(1, 14):
+    for i in range(1, size_of_deck - 2):
         deck.append('hjärter '+str(i))
         deck.append('spader '+str(i))
         deck.append('ruter '+str(i))
@@ -32,7 +34,7 @@ def create_deck():
 def create_board():
     deck = create_deck()
     random.shuffle(deck)
-    board = deck[:14]
+    board = deck[:size_of_deck-2]
     board.append(dick_card)
     board.append(bomb_card)
     random.shuffle(board)
@@ -40,18 +42,18 @@ def create_board():
 
 
 def right_or_left(findex, cindex, card):
-    if findex % 4 < cindex % 4:
+    if findex % math.sqrt(size_of_deck) < cindex % math.sqrt(size_of_deck):
         return 'Dick är vänster om ' + card
-    elif findex % 4 > cindex % 4:
+    elif findex % math.sqrt(size_of_deck) > cindex % math.sqrt(size_of_deck):
         return 'Dick är höger om ' + card
     else:
         return ''
 
 
 def up_or_down(findex, cindex, card):
-    if int(findex / 4) > int(cindex / 4):
+    if int(findex / math.sqrt(size_of_deck)) > int(cindex / math.sqrt(size_of_deck)):
         return 'Dick är nedanför ' + card
-    elif int(findex / 4) < int(cindex / 4):
+    elif int(findex / math.sqrt(size_of_deck)) < int(cindex / math.sqrt(size_of_deck)):
         return 'Dick är ovanför ' + card
     else:
         return ''
@@ -106,7 +108,7 @@ pygame.display.set_caption('Find Dick')
 
 cards = [Card(s) for s in board]
 pygame.font.init()
-basicFont = pygame.font.SysFont("dejavusans", 14)
+basicFont = pygame.font.SysFont("dejavusans", size_of_deck-2)
 
 
 buttons = []
@@ -136,7 +138,7 @@ def render():
         rect = windowSurface.blit(card.surface, (x_pos, y_pos))
         visible_cards.append((rect, card))
         x += 1
-        if x > 3:
+        if x > math.sqrt(size_of_deck) - 1:
             x = 0
             y += 1
     return visible_cards
