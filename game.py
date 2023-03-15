@@ -19,7 +19,10 @@ slackbot = SlackBot(token)
 dick_card = "Dick"
 bomb_card = "bomb"
 
-size_of_deck = 36
+size_of_deck = 16
+n_rows = int(math.sqrt(size_of_deck))
+
+
 def create_deck():
     deck = []
     for i in range(1, size_of_deck - 2):
@@ -42,18 +45,18 @@ def create_board():
 
 
 def right_or_left(findex, cindex, card):
-    if findex % math.sqrt(size_of_deck) < cindex % math.sqrt(size_of_deck):
+    if findex % n_rows < cindex % n_rows:
         return 'Dick är vänster om ' + card
-    elif findex % math.sqrt(size_of_deck) > cindex % math.sqrt(size_of_deck):
+    elif findex % n_rows > cindex % n_rows:
         return 'Dick är höger om ' + card
     else:
         return ''
 
 
 def up_or_down(findex, cindex, card):
-    if int(findex / math.sqrt(size_of_deck)) > int(cindex / math.sqrt(size_of_deck)):
+    if int(findex / n_rows) > int(cindex / n_rows):
         return 'Dick är nedanför ' + card
-    elif int(findex / math.sqrt(size_of_deck)) < int(cindex / math.sqrt(size_of_deck)):
+    elif int(findex / n_rows) < int(cindex / n_rows):
         return 'Dick är ovanför ' + card
     else:
         return ''
@@ -93,9 +96,18 @@ randomUsers= list(users.keys())
 random.shuffle(randomUsers)
 impostors = randomUsers[:1]
 
-for impostor in impostors:
-    slackbot.sendMessage(users[impostor], 'Hej, du är en skojare, ditt uppdrag är att lura de andra deltagarna med falska ledtrådar.\nBomben är på rad: ' + str(int(bomb_index / 4) + 1) + ' och kolumn: ' + str(int(bomb_index % 4) + 1) + '\nDick är på rad: ' + str(int(dick_index / 4) + 1) + ' och kolumn: ' + str(int(dick_index % 4) + 1))
 
+def pretty_board_print():
+    board_matrix = [board[i:i + n_rows] for i in range(0, size_of_deck, n_rows)]
+    out = ""
+    for row in board_matrix:
+        out += str(row) + "\n"
+
+    return out
+
+
+for impostor in impostors:
+    slackbot.sendMessage(users[impostor], 'Hej, du är en skojare, ditt uppdrag är att lura de andra deltagarna med falska ledtrådar.\nBomben är på rad: ' + str(int(bomb_index / n_rows) + 1) + ' och kolumn: ' + str(int(bomb_index % n_rows) + 1) + '\nDick är på rad: ' + str(int(dick_index / n_rows) + 1) + ' och kolumn: ' + str(int(dick_index % n_rows) + 1) + '\nmed följande bräde:\n' + pretty_board_print())
 
 def send_random_clue(user):
     slackbot.sendMessage(users[user], clues[0])
@@ -138,7 +150,7 @@ def render():
         rect = windowSurface.blit(card.surface, (x_pos, y_pos))
         visible_cards.append((rect, card))
         x += 1
-        if x > math.sqrt(size_of_deck) - 1:
+        if x > n_rows - 1:
             x = 0
             y += 1
     return visible_cards
