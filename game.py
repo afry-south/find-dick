@@ -54,6 +54,7 @@ def create_board():
     board.append('Oscar')
     board.append('Björn')
     board.append('Johan')
+    board.append('Nina')
     random.shuffle(board)
     return board
 
@@ -186,6 +187,8 @@ while True:
             clicked_cards = [s[1] for s in visibleCards if s[0].collidepoint(pos)]
             for card in clicked_cards:
                 card.flip()
+                if(card.name == 'Dick'):
+                    windowSurface.blit(pygame.image.load("resources/dick.png"),(600,0))
             clicked_buttons = [s[1] for s in buttons if s[0].collidepoint(pos)]
             for button in clicked_buttons:
                 send_random_clue(button)
