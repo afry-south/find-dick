@@ -10,7 +10,8 @@ class Sound :
 
 
     def play(self, song) :
-        path_start = sound_dir + "/" + str(song).lower() + sound_file_extension
+        print("SONG: " + song)
+        path_start = sound_dir + "/" + str(song).lower() + "." + sound_file_extension
         print(path_start)
 
         if "hjärter" in song or "spader" in song or "klöver" in song or "ruter" in song or (not exists(path_start)):
@@ -22,6 +23,7 @@ class Sound :
         if song == "default" or song == "Dick" or song == "bomb" :
             path += str(random.randint(0,8))
         path += "." + sound_file_extension
+        print("PATH: " + path)
         mixer.music.load(path)
         mixer.music.play()
 
