@@ -12,7 +12,7 @@ class Sound :
 
     def play(self, song) :
     
-        print("SONG: " + song)
+        #print("SONG: " + song)
         if "hjärter" in song or "spader" in song or "klöver" in song or "ruter" in song :
             song = "default"
             
@@ -22,8 +22,8 @@ class Sound :
         else :
         
             list = os.listdir(sound_dir)
-            print(list)
-            print(song + "0." + sound_file_extension)
+            #print(list)
+            #print(song + "0." + sound_file_extension)
             tmp = song + "0." + sound_file_extension
             if tmp.lower() not in list :
                 path = sound_dir + "/" + "default" + str(random.randint(0,8)) + "." + sound_file_extension
@@ -31,7 +31,7 @@ class Sound :
         
                 path = sound_dir + "/" + str(song).lower() + "0." + sound_file_extension
             
-        print("PATH: " + path)
+        #print("PATH: " + path)
         mixer.music.load(path)
         mixer.music.play()
 
