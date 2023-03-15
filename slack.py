@@ -17,5 +17,5 @@ class SlackBot:
     def sendMessage(self, userId, message):
         url = 'https://slack.com/api/chat.postMessage'
         data = {"text" : message, "channel" : userId}
-        res = requests.post(url, headers=this.headers, data=data)
+        res = requests.post(url, headers=self.headers, data=data)
         return res

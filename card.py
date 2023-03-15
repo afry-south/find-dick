@@ -4,10 +4,17 @@ from pygame.locals import *
 from sound import Sound
 from settings import card_size, card_height, card_width
 from settings import bomb_sound, found_sound, game_over_sound
+from os.path import exists
 
 cardback = pygame.image.load("resources/cardback.jpg")
 cardback = pygame.transform.rotate(cardback, 90)
 cardback = pygame.transform.scale(cardback, card_size)
+
+bombImage = pygame.image.load("resources/bomb.png")
+bombImage = pygame.transform.scale(bombImage, card_size)
+
+dickImage = pygame.image.load("resources/dick.png")
+dickImage = pygame.transform.scale(dickImage, card_size)
 
 pygame.font.init()
 basicFont = pygame.font.SysFont("dejavusans", 14)
@@ -16,6 +23,12 @@ basicFont = pygame.font.SysFont("dejavusans", 14)
 #     print(font)
 
 
+def loadImage(name, self):
+    if(exists("resources/"+ name + ".png")):
+        image = pygame.image.load("resources/"+ name + ".png")
+        return pygame.transform.scale(image, card_size)
+    else:
+        return self.front
 class Card:
     front = None
     surface = cardback
@@ -34,9 +47,9 @@ class Card:
     def flip(self):
         s = Sound()
         if self.surface == cardback:
-            self.surface = self.front
+            self.surface = loadImage(self.name, self)
         else:
             s.surface = cardback
         #Play sound
-        s.play(self.name)    
-        
+        s.play(self.name)
+
