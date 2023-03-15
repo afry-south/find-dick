@@ -10,7 +10,7 @@ class Sound :
 
 
     def play(self, song) :
-        path_start = sound_dir + "/" + str(song).lower() + "1.mp3"
+        path_start = sound_dir + "/" + str(song).lower() + sound_file_extension
         print(path_start)
 
         if "hjärter" in song or "spader" in song or "klöver" in song or "ruter" in song or (not exists(path_start)):
