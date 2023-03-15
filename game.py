@@ -19,7 +19,7 @@ slackbot = SlackBot(token)
 dick_card = "Dick"
 bomb_card = "bomb"
 
-size_of_deck = 36
+size_of_deck = 16
 def create_deck():
     deck = []
     for i in range(1, size_of_deck - 2):
@@ -34,9 +34,23 @@ def create_deck():
 def create_board():
     deck = create_deck()
     random.shuffle(deck)
-    board = deck[:size_of_deck-2]
+    board = deck[:size_of_deck-16]
     board.append(dick_card)
     board.append(bomb_card)
+    board.append('Daniel')
+    board.append('Ronnie')
+    board.append('Marcos')
+    board.append('Per')
+    board.append('Erica')
+    board.append('Dennis')
+    board.append('Carl')
+    board.append('Patrik')
+    board.append('Hampus')
+    board.append('Chadvin')
+    board.append('Lisa')
+    board.append('Oscar')
+    board.append('Björn')
+    board.append('Johan')
     random.shuffle(board)
     return board
 

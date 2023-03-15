@@ -2,6 +2,7 @@ import pygame.image
 import pygame.transform
 from pygame.locals import *
 from settings import card_size, card_height, card_width
+from os.path import exists
 
 cardback = pygame.image.load("resources/cardback.jpg")
 cardback = pygame.transform.rotate(cardback, 90)
@@ -19,7 +20,17 @@ basicFont = pygame.font.SysFont("dejavusans", 14)
 # for font in pygame.font.get_fonts():
 #     print(font)
 
+name_images = {
+    "bomb": bombImage,
+    "Dick": dickImage
+}
 
+def loadImage(name, self):
+    if(exists("resources/"+ name + ".png")):
+        image = pygame.image.load("resources/"+ name + ".png")
+        return pygame.transform.scale(image, card_size)
+    else:
+        return self.front
 class Card:
     front = None
     surface = cardback
@@ -37,11 +48,6 @@ class Card:
 
     def flip(self):
         if self.surface == cardback:
-            if(self.name == 'bomb'):
-                self.surface = bombImage
-            elif(self.name == 'Dick'):
-                self.surface = dickImage
-            else:
-                self.surface = self.front
+            self.surface = loadImage(self.name, self)
         else:
             self.surface = cardback

@@ -11,7 +11,6 @@ class SlackBot:
         params = {'email' : email}
         res = requests.get(url, params=params, headers=self.headers)
         print(res.text)
-        print(json.loads(res.text))
         id = json.loads(res.text)['user']['id']
         return id
 
