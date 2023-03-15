@@ -1,7 +1,7 @@
 from pygame import mixer
 import random
 from settings import bomb_sound, found_sound, game_over_sound, sound_file_extension, sound_dir
-
+from os.path import exists
 class Sound :
 
     def __init__(self):
@@ -10,9 +10,15 @@ class Sound :
 
 
     def play(self, song) :
-        if "hjärter" in song or "spader" in song or "klöver" in song or "ruter" in song :
+        path_start = sound_dir + "/" + str(song).lower() + "1.mp3"
+        print(path_start)
+
+        if "hjärter" in song or "spader" in song or "klöver" in song or "ruter" in song or (not exists(path_start)):
+            print("HELLO")
             song = "default"
+
         path = sound_dir + "/" + str(song).lower()
+
         if song == "default" or song == "Dick" or song == "bomb" :
             path += str(random.randint(0,8))
         path += "." + sound_file_extension

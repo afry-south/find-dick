@@ -54,7 +54,7 @@ def create_board():
     board.append('Hampus')
     board.append('Chadvin')
     board.append('Lisa')
-    board.append('Oscar')
+    #board.append('Oscar')
     board.append('Björn')
     board.append('Johan')
     board.append('Nina')
